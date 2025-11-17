@@ -6,11 +6,11 @@ import axios from 'axios'
 
 function App() {
   const [count, setCount] = useState(0)
-  const [str, setStr] = useState('')
+  const [str, setStr] = useState([])
 
     useEffect(() => {
     axios
-      .get("https://onlyfone-be-production.up.railway.app/api/hello")
+      .get("http://localhost:8080/api/persons")
       .then((res) => {
         setStr(res.data);
       })
@@ -29,10 +29,10 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>{str}</h1>
+      <h1>{str.length > 0 ? str[0].name : ''}</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+          {count > 0 ? 'ăn đb ăn c' : 'count is' } {count}
         </button>
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
