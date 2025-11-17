@@ -4,13 +4,15 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import axios from 'axios'
 
+// http://localhost:8080/api/persons
+
 function App() {
   const [count, setCount] = useState(0)
   const [str, setStr] = useState([])
 
     useEffect(() => {
     axios
-      .get("http://localhost:8080/api/persons")
+      .get("https://onlyfone-be-production.up.railway.app/api/persons")
       .then((res) => {
         setStr(res.data);
       })
