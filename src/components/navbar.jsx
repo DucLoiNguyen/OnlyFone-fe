@@ -1,86 +1,182 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuList,
+  NavigationMenuLink,
+} from "@/components/ui/navigation-menu";
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-// Icons từ lucide-react
-import { Menu } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
-// Component Link giả định
-// const Link = ({ href, children, className }) => (
-//   <a href={href} className={className}>{children}</a>
-// );
-
-// Dữ liệu cho menu điều hướng
-const navItems = [
-  { title: "Trang Chủ", href: "/" },
-  { title: "Sản Phẩm", href: "/products" },
-  { title: "Giới Thiệu", href: "/about" },
-  { title: "Liên Hệ", href: "/contact" },
-];
-
-// Component Menu Mobile
-const MobileMenu = ({ navItems }) => (
-  <Sheet>
-    <SheetTrigger asChild>
-      <Button variant="ghost" size="icon" aria-label="Mở menu">
-        <Menu className="h-6 w-6" />
-      </Button>
-    </SheetTrigger>
-    <SheetContent side="left">
-      <Link href="/" className="text-xl font-bold text-primary">
-        Tên Website
-      </Link>
-      <Separator className="my-4" />
-      <div className="flex flex-col space-y-4">
-        {navItems.map((item) => (
-          <Link
-            key={item.title}
-            href={item.href}
-            // Định kiểu cho link trên di động
-            className="text-lg font-medium hover:text-primary transition-colors block p-2"
-          >
-            {item.title}
-          </Link>
-        ))}
-      </div>
-    </SheetContent>
-  </Sheet>
-);
-
+import { Menu, ShoppingCart, Search, LogIn, LogOut, User } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/context/authcontext";
 
 function Navbar() {
 
-  
-  return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
-      <div className="flex h-16 items-center justify-between px-4 md:px-6 w-full">
-        
-        {/* Logo / Tên Thương Hiệu */}
-        <Link href="/" className="text-xl font-bold text-foreground">
-          Tên Website
-        </Link>
-        
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
-          {navItems.map((item) => (
-            <Link 
-              key={item.title} 
-              href={item.href} 
-              // Định kiểu cho link trên desktop
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              {item.title}
-            </Link>
-          ))}
-        </nav>
+  const { isAuthenticated, logout } = useAuth();
 
-        {/* Mobile Menu Trigger (Hamburger Icon) */}
-        <div className="md:hidden">
-          <MobileMenu navItems={navItems} />
+  return (
+    <header className="border-b bg-[#0a0a0a] sticky top-0 z-50">
+      <div className="container mx-auto flex items-center justify-between py-3">
+        {/* Logo */}
+        <Link to="/" className="text-xl font-bold text-white">
+          OnlyFone
+        </Link>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-6 text-white">
+          <NavigationMenu>
+            <NavigationMenuList className="flex gap-4">
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link to="/products" className="text-sm font-medium">
+                    Sản phẩm
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link to="/sale" className="text-sm font-medium">
+                    Khuyến mãi
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link to="/contact" className="text-sm font-medium">
+                    Liên hệ
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+
+          {/* Search */}
+          <div className="flex w-64">
+            <Input
+              className="focus-visible:ring-0 focus-visible:ring-offset-0"
+              placeholder="Tìm kiếm điện thoại..."
+            />
+            <Button type="submit" variant="outline" size="icon">
+              <Search className="h-5 w-5" />
+            </Button>
+          </div>
+
+          {/* Cart */}
+          <Button variant="outline" size="icon">
+            <ShoppingCart className="h-5 w-5" />
+          </Button>
+
+          {/* Avatar menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Avatar className="h-8 w-8 cursor-pointer">
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>OF</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end" className="w-48">
+              {isAuthenticated ? (
+                <>
+                  <DropdownMenuLabel>Tài khoản</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="flex items-center gap-2">
+                      <User size={16} /> Hồ sơ cá nhân
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link to="/orders" className="flex items-center gap-2">
+                      <ShoppingCart size={16} /> Đơn hàng
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem
+                    onClick={logout}
+                    className="flex items-center gap-2 text-red-500"
+                  >
+                    <LogOut size={16} /> Đăng xuất
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <>
+                  <DropdownMenuLabel>Tài khoản</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem asChild>
+                    <Link to="/login" className="flex items-center gap-2">
+                      <LogIn size={16} /> Đăng nhập
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link to="/register" className="flex items-center gap-2">
+                      <User size={16} /> Đăng ký
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
+
+        {/* Mobile Menu */}
+        <Sheet>
+          <SheetTrigger className="md:hidden text-white">
+            <Menu className="h-6 w-6" />
+          </SheetTrigger>
+
+          <SheetContent side="left" className="w-64">
+            <div className="flex flex-col gap-4 mt-6">
+              <Link to="/products">Sản phẩm</Link>
+              <Link to="/sale">Khuyến mãi</Link>
+              <Link to="/contact">Liên hệ</Link>
+
+              {/* Login / logout mobile */}
+              {!isAuthenticated ? (
+                <>
+                  <Link to="/login">Đăng nhập</Link>
+                  <Link to="/register">Đăng ký</Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/profile">Hồ sơ</Link>
+                  <Link to="/orders">Đơn hàng</Link>
+                  <button
+                    onClick={logout}
+                    className="text-left text-red-500"
+                  >
+                    Đăng xuất
+                  </button>
+                </>
+              )}
+
+              <Input placeholder="Tìm kiếm..." className="mt-4" />
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
-    </header>)
+    </header>
+  );
 }
 
 export default Navbar;

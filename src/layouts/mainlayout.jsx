@@ -6,7 +6,7 @@ function MainLayout() {
   return (
     <div>
       <Navbar />
-      <main style={{ minHeight: "70vh" }}>
+      <main style={{ minHeight: "81vh" }}>
         <Outlet /> {/* Nơi render các page con */}
       </main>
       <Footer />

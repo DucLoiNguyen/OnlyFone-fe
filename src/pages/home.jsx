@@ -1,8 +1,13 @@
+import Banner from "@/components/banner";
+import CategoriesSection from "@/components/categorysection";
+import FeaturedProductsSection from "@/components/featuredproductssection";
+
 function Home() {
   return (
-    <div >
-      <h1>Trang Chủ</h1>
-      <p>Chào mừng đến với OnlyFone!</p>
+    <div className="">
+      <Banner />
+      <CategoriesSection />
+      <FeaturedProductsSection />
     </div>
   );
 }
